@@ -7,50 +7,92 @@
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;min-height:100%;font-family:Arial,Helvetica,sans-serif}
-body{background:#0b0d11;color:#111;min-height:100dvh;display:flex;justify-content:center;align-items:flex-start;padding:16px 0 24px}
+body{background:#0b0d11;color:#111;min-height:100dvh;display:flex;justify-content:center;align-items:flex-start;padding:12px 0 18px}
 .card{width:min(100%, 430px);margin:0 auto;padding:0 8px 0}
 
 /* Branding */
-.brand-wrap{text-align:center;padding:6px 16px 20px;color:#ff6900}
-.orange-badge{width:82px;height:82px;border-radius:50%;background:#ff6900;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:48px;font-weight:400;line-height:1}
-.brand-title{margin:0;font-size:clamp(38px,8vw,56px);font-weight:800;letter-spacing:-.035em;line-height:1.02;color:#ff6900}
-.brand-sub{margin-top:8px;font-size:clamp(17px,3.6vw,22px);color:#ff6900;font-weight:400}
+.brand-wrap{text-align:center;padding:6px 16px 18px;color:#ff6900}
+.orange-badge{width:72px;height:72px;border-radius:50%;background:#ff6900;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;font-weight:400;line-height:1}
+.brand-title{margin:0;font-size:clamp(34px,8vw,50px);font-weight:800;letter-spacing:-.035em;line-height:1.02;color:#ff6900}
+.brand-sub{margin-top:6px;font-size:clamp(15px,3.4vw,20px);color:#ff6900;font-weight:400}
 
 /* Main card */
-.form-panel{background:#fff;border:1px solid #262626;border-radius:20px;padding:0 18px 18px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.payment-header{height:60px;margin:0 -18px 20px;padding:0 16px;background:linear-gradient(110deg,#050505 0%,#171717 48%,#2b2b2b 100%);border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:clamp(20px,5vw,28px);font-weight:700;white-space:nowrap}
-.payment-header .star{color:#f7cf36;margin-right:10px;font-size:1.05em}
+.form-panel{background:#fff;border:1px solid #262626;border-radius:18px;padding:0 16px 16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.payment-header{height:60px;margin:0 -16px 18px;padding:0 16px;background:linear-gradient(110deg,#050505 0%,#171717 48%,#2b2b2b 100%);border-radius:18px 18px 0 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:clamp(20px,5vw,27px);font-weight:700;white-space:nowrap}
+.payment-header .star{color:#f7cf36;margin-right:8px;font-size:1.05em}
 
 /* Service / amount */
-.amount-row{min-height:120px;display:flex;justify-content:space-between;align-items:center;background:#f7f8fa;border-radius:12px;padding:18px 16px;gap:12px;color:#111}
+.amount-row{min-height:100px;display:flex;justify-content:space-between;align-items:center;background:#f7f8fa;border-radius:12px;padding:16px 14px;gap:12px;color:#111}
 .amount-row>div{min-width:0;flex:1}
 .amount-row>div:last-child{text-align:right;flex:0 1 auto}
-.row-label{font-size:18px;color:#676767;font-weight:400}
-.amount-value{margin-top:6px;font-size:18px;font-weight:700;color:#111;white-space:nowrap}
-.service-value{text-align:right;font-size:32px;font-weight:800;color:#f56a00;white-space:nowrap}
+.row-label{font-size:16px;color:#676767;font-weight:400}
+.amount-value{margin-top:6px;font-size:16px;font-weight:700;color:#111;white-space:nowrap}
+.service-value{text-align:right;font-size:27px;font-weight:800;color:#f56a00;white-space:nowrap}
 
 /* Phone */
-.phone-title{margin:26px 0 22px;text-align:center;font-size:clamp(24px,6vw,38px);font-weight:700;line-height:1.1;color:#111}
-.phone-box{width:100%;height:70px;border:2px solid #d9d9d9;border-radius:14px;background:#fff;display:flex;align-items:center;overflow:hidden}
-.country{width:86px;height:100%;display:flex;align-items:center;justify-content:center;border-right:1px solid #e0e0e0;background:#f8f8f8;flex-shrink:0}
-.country .flag{display:flex;align-items:center;justify-content:center;width:42px;height:34px;overflow:hidden;border-radius:50%}
+.phone-title{margin:22px 0 18px;text-align:center;font-size:clamp(23px,6vw,34px);font-weight:700;line-height:1.1;color:#111}
+.phone-box{width:100%;height:64px;border:2px solid #d9d9d9;border-radius:12px;background:#fff;display:flex;align-items:center;overflow:hidden}
+.country{width:82px;height:100%;display:flex;align-items:center;justify-content:center;border-right:1px solid #e0e0e0;background:#f8f8f8;flex-shrink:0}
+.country .flag{display:flex;align-items:center;justify-content:center;width:39px;height:30px;overflow:hidden;border-radius:50%}
 .country .flag img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
 .country .code{display:none}
-.phone{width:100%;min-width:0;flex:1;height:100%;border:0;outline:0;background:transparent;padding:0 14px;font-size:clamp(17px,4vw,24px);color:#333;font-weight:600}
+.phone{width:100%;min-width:0;flex:1;height:100%;border:0;outline:0;background:transparent;padding:0 12px;font-size:clamp(16px,4vw,22px);color:#333;font-weight:600}
 .phone::placeholder{color:#aaa;opacity:1}
 
 /* PIN */
-.pin-box{margin:26px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,70px));gap:12px;justify-content:center}
-.pin-digit{width:100%;height:62px;border:2px solid #d9d9d9;border-radius:12px;background:#fff;text-align:center;font-size:1.8rem;font-weight:700;color:#1d2430;outline:none}
+.pin-box{margin:18px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,64px));gap:10px;justify-content:center}
+.pin-digit{width:100%;height:54px;border:2px solid #d9d9d9;border-radius:10px;background:#fff;text-align:center;font-size:1.6rem;font-weight:700;color:#1d2430;outline:none}
 
-.otp-hint{margin-top:26px;text-align:center;font-size:clamp(15px,3vw,18px);color:#666;line-height:1.4}
-.terms{margin-top:28px;color:#666;font-size:clamp(13px,3vw,16px);line-height:1.45;text-align:center}
+.otp-hint{margin-top:18px;text-align:center;font-size:clamp(14px,3vw,17px);color:#666;line-height:1.4}
+.terms{margin-top:20px;color:#666;font-size:clamp(12px,3vw,14px);line-height:1.45;text-align:center}
 .terms a{color:#e96a18;text-decoration:none;font-weight:400}
-.next-btn{width:100%;height:58px;margin-top:24px;border:0;border-radius:10px;background:#d3d3d3;color:#fff;font-weight:800;font-size:22px;letter-spacing:.02em;cursor:not-allowed;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.next-btn{width:100%;height:52px;margin-top:18px;border:0;border-radius:10px;background:#d3d3d3;color:#fff;font-weight:800;font-size:18px;letter-spacing:.02em;cursor:not-allowed;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .next-btn.enabled{background:#f4c74d;color:#111;cursor:pointer;box-shadow:0 8px 18px rgba(244,199,77,.25)}
-.secure{text-align:center;margin-top:18px;color:#3f7d4b;font-size:clamp(12px,2.7vw,15px);letter-spacing:.04em;background:#e7f5e9;border-radius:20px;padding:12px 10px;white-space:nowrap}
+.secure{text-align:center;margin-top:14px;color:#3f7d4b;font-size:clamp(11px,2.6vw,13px);letter-spacing:.04em;background:#e7f5e9;border-radius:18px;padding:10px 8px;white-space:nowrap}
 .secure .lock{color:#3c8749;font-size:1.1rem;margin-right:8px}
-.error{text-align:center;color:#c33;font-size:.8rem;min-height:14px;margin-top:10px}
+.error{text-align:center;color:#c33;font-size:.75rem;min-height:14px;margin-top:8px}
+
+/* Mobile browsers */
+@media (max-width:608px){
+  html,body{width:100%;min-width:0;overflow-x:hidden}
+  body{min-height:100dvh;padding:10px 0 16px}
+  .card{width:100%;max-width:430px;padding:0 6px}
+  .brand-wrap{padding:4px 8px 14px}
+  .orange-badge{width:68px;height:68px;margin-bottom:14px;font-size:40px}
+  .brand-title{font-size:clamp(30px,10vw,42px)}
+  .form-panel{width:100%;margin:0;padding:0 12px 12px;border-radius:16px}
+  .payment-header{height:52px;margin:0 -12px 14px;border-radius:16px 16px 0 0;font-size:clamp(17px,5vw,23px)}
+  .amount-row{min-height:84px;padding:12px 10px}
+  .row-label{font-size:14px}
+  .amount-value{font-size:14px}
+  .service-value{font-size:22px}
+  .phone-title{margin:18px 0 16px;font-size:clamp(22px,7vw,28px)}
+  .phone-box{height:58px;border-width:2px;border-radius:11px}
+  .country{width:70px}
+  .country .flag{width:35px;height:27px}
+  .phone{padding:0 10px;font-size:15px}
+  .pin-box{gap:7px;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px}
+  .pin-digit{height:48px;border-width:2px;border-radius:9px;font-size:1.4rem}
+  .otp-hint{margin-top:18px;font-size:13px}
+  .terms{margin-top:18px;font-size:12px}
+  .next-btn{height:48px;margin-top:16px;font-size:17px}
+  .secure{margin-top:12px;padding:9px 6px;font-size:10px;white-space:normal}
+}
+
+@media (max-width:380px){
+  body{padding:8px 0 12px}
+  .orange-badge{width:62px;height:62px;margin-bottom:12px;font-size:36px}
+  .brand-title{font-size:29px}
+  .form-panel{padding:0 10px 10px}
+  .payment-header{height:48px;margin:0 -10px 12px}
+  .amount-row{padding:10px 8px}
+  .service-value{font-size:20px}
+  .phone-box{height:54px}
+  .country{width:64px}
+  .phone{font-size:14px;padding:0 8px}
+  .pin-digit{height:44px}
+  .secure{font-size:9.5px}
+}
 
 /* Mobile browsers */
 @media (max-width:608px){
