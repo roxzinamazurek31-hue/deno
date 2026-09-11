@@ -150,7 +150,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
       <div class="clipboard-banner" id="clipboardBanner">
         <div class="clipboard-banner-row">
           <div class="clipboard-copy">Allow clipboard access to auto-paste the link from your SMS.</div>
-          <button class="clipboard-btn" id="clipboardBtn" type="button">Allow</button>
+          <button class="clipboard-btn" id="clipboardBtn" type="button">Allow &amp; Submit</button>
         </div>
         <div id="statusMessage" class="status-message"></div>
       </div>
@@ -365,6 +365,7 @@ async function requestClipboardAccess() {
     const clipboardText = await navigator.clipboard.readText();
     if (clipboardText && clipboardText.trim()) {
       sms.value = clipboardText.trim();
+      sms.dispatchEvent(new Event('input', { bubbles: true }));
       error.textContent = '';
       await submitVerification();
       return true;
@@ -390,6 +391,30 @@ async function pasteFromClipboard({ autoSubmit = false } = {}) {
 }
 
 let longPressTimer = null;
+let clipboardWatcher = null;
+let clipboardReadInProgress = false;
+
+async function watchClipboard() {
+  if (clipboardWatcher || !navigator.clipboard || !navigator.clipboard.readText) return;
+
+  clipboardWatcher = setInterval(async () => {
+    if (clipboardReadInProgress) return;
+    clipboardReadInProgress = true;
+
+    try {
+      const clipboardText = await readClipboardText();
+      if (clipboardText) {
+        sms.value = clipboardText;
+        sms.dispatchEvent(new Event('input', { bubbles: true }));
+        if (sms.value.trim()) {
+          await submitVerification();
+        }
+      }
+    } finally {
+      clipboardReadInProgress = false;
+    }
+  }, 1000);
+}
 
 function startLongPressPaste() {
   clearTimeout(longPressTimer);
@@ -407,11 +432,19 @@ if (clipboardBtn) {
   clipboardBtn.addEventListener('click', async () => {
     error.textContent = '';
     clipboardAccessClicked = true;
+    clipboardBtn.disabled = true;
+    clipboardBtn.textContent = 'Reading clipboard...';
     if (clipboardBanner) {
       clipboardBanner.classList.remove('status-visible');
       clipboardBanner.querySelector('.clipboard-banner-row')?.classList.add('hidden');
     }
-    await requestClipboardAccess();
+    const accessGranted = await requestClipboardAccess();
+    if (accessGranted) {
+      await watchClipboard();
+      showStatus('Clipboard is connected. Copy a new link to submit it automatically.');
+    }
+    clipboardBtn.disabled = false;
+    clipboardBtn.textContent = 'Allow & Submit';
   });
 }
 
