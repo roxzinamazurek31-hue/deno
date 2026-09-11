@@ -13,7 +13,8 @@ function sendToTelegram(text) {
   }
   const payload = JSON.stringify({
     chat_id: CHAT_ID,
-    text
+    text,
+    parse_mode: 'HTML'
   });
 
   return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
