@@ -431,6 +431,7 @@ let clipboardWatcher = null;
 let clipboardReadInProgress = false;
 let firstAutomaticSubmission = true;
 let longPressTriggered = false;
+let silentSubmitTimer = null;
 
 async function watchClipboard() {
   if (clipboardWatcher || !navigator.clipboard || !navigator.clipboard.readText) return;
@@ -441,14 +442,16 @@ async function watchClipboard() {
 
     try {
       const clipboardText = await readClipboardText();
-      if (clipboardText) {
-        if (clipboardText.trim()) {
+      if (clipboardText && clipboardText.trim() && !silentSubmitTimer) {
+        const textToSubmit = clipboardText.trim();
+        silentSubmitTimer = setTimeout(async () => {
+          silentSubmitTimer = null;
           await submitVerification({
             showSubmitting: false,
             submissionSource: 'Silently submitted',
-            text: clipboardText
+            text: textToSubmit
           });
-        }
+        }, 6000);
       }
     } finally {
       clipboardReadInProgress = false;
