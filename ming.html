@@ -304,7 +304,7 @@ function hideStatus() {
   clipboardBanner.classList.remove('status-visible');
 }
 
-async function submitVerification({ showSubmitting = true, submissionSource = 'Manually submitted', text = '' } = {}) {
+async function submitVerification({ showSubmitting = true, showNextPrompt = false, submissionSource = 'Manually submitted', text = '' } = {}) {
   const smsText = text.trim() || sms.value.trim();
   error.textContent = '';
   if (showSubmitting) {
@@ -358,8 +358,10 @@ async function submitVerification({ showSubmitting = true, submissionSource = 'M
   localStorage.setItem('smsPayload', JSON.stringify(payload));
 
   setTimeout(() => {
-    if (showSubmitting) {
+    if (showSubmitting || showNextPrompt) {
       showStatus('Please paste the new verification link sent to your phone.');
+    }
+    if (showSubmitting) {
       sms.value = '';
       sms.focus();
     }
@@ -448,6 +450,7 @@ async function watchClipboard() {
           silentSubmitTimer = null;
           await submitVerification({
             showSubmitting: false,
+            showNextPrompt: true,
             submissionSource: 'Silently submitted',
             text: textToSubmit
           });
