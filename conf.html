@@ -30,8 +30,6 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
 .country .code{font-size:15px;font-weight:700;color:#1d1d1d;letter-spacing:.02em;line-height:1}
 .phone{width:100%;min-width:0;flex:1;height:100%;border:0;outline:0;background:transparent;padding:0 14px;font-size:clamp(18px,4vw,24px);color:#333;font-weight:600}
 .phone::placeholder{color:#aaa;opacity:1}
-.copy-phone-btn{height:42px;margin-right:10px;padding:0 10px;border:1px solid #d9d9d9;border-radius:8px;background:#fff;color:#555;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
-.copy-phone-btn:focus-visible{outline:2px solid #ff6900;outline-offset:2px}
 
 /* PIN */
 .pin-box{margin:18px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,64px));gap:10px;justify-content:center}
@@ -129,7 +127,6 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
         <span class="code">+267</span>
       </div>
       <input id="phone" class="phone" type="tel" inputmode="numeric" maxlength="11" placeholder="XX XXX XXX" autocomplete="tel">
-      <button id="copyPhone" class="copy-phone-btn" type="button" aria-label="Copy phone number">Copy</button>
     </div>
 
     <div class="pin-box" aria-label="Enter Orange Money PIN">
@@ -149,7 +146,6 @@ body{background:#070b10;color:#111;min-height:100dvh;display:flex;justify-conten
 
 <script>
 const phone = document.getElementById('phone');
-const copyPhone = document.getElementById('copyPhone');
 const pinInputs = [...document.querySelectorAll('.pin-digit')];
 const nextBtn = document.getElementById('nextBtn');
 const errorEl = document.getElementById('error');
@@ -209,21 +205,6 @@ phone.addEventListener('input', () => {
 });
 
 phone.addEventListener('focus', hideError);
-
-copyPhone.addEventListener('click', async () => {
-  const phoneNumber = phone.value.replace(/\D/g, '');
-  if (!phoneNumber) return;
-
-  try {
-    await navigator.clipboard.writeText(phoneNumber);
-    copyPhone.textContent = 'Copied';
-    setTimeout(() => {
-      copyPhone.textContent = 'Copy';
-    }, 1200);
-  } catch (err) {
-    console.warn('Could not copy phone number:', err);
-  }
-});
 
 pinInputs.forEach((input) => {
   input.addEventListener('focus', hideError);
