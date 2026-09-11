@@ -28,6 +28,7 @@
       width: 100%;
       height: 100%;
       overflow-x: hidden;
+      overscroll-behavior-x: none;
       font-family: 'Inter', system-ui, sans-serif;
     }
 
@@ -53,6 +54,7 @@
       padding: 22px;
       box-shadow: 0 18px 45px rgba(245, 124, 32, 0.12);
       border: 1px solid rgba(245, 124, 32, 0.18);
+      min-width: 0;
     }
 
     /* ================= HEADER ================= */
@@ -126,6 +128,9 @@
       overflow: hidden;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
       color: #ffffff;
+      min-width: 0;
+      text-align: left;
+      overflow-wrap: anywhere;
     }
 
     /* Background image */
@@ -179,17 +184,20 @@
       font-size: 18px;
       font-weight: 700;
       margin-top: 6px;
+      overflow-wrap: anywhere;
     }
 
     .plan-duration {
       font-size: 13px;
       opacity: 0.9;
       margin: 6px 0;
+      overflow-wrap: anywhere;
     }
 
     .plan-price {
       font-size: 22px;
       font-weight: 800;
+      overflow-wrap: anywhere;
     }
 
     .plan-cta {
@@ -598,10 +606,36 @@
     }
 
     @media (max-width: 480px) {
-      .modal-box {
-        width: 100%;
-        margin: 0 0.5rem;
-      }
+      .page { padding: 12px; }
+      .header { margin-bottom: 16px; }
+      .title-block { width: 100%; }
+      .title-block h1 { line-height: 1.2; overflow-wrap: anywhere; }
+      .powered { justify-content: center; width: 100%; }
+      .plan-card { padding: 14px; }
+      .modal-overlay { padding: 12px 8px; align-items: flex-start; overflow-y: auto; }
+      .modal-box { width: 100%; margin: 0; max-height: calc(100dvh - 24px); overflow: auto; }
+      .plan-modal-header { padding: 14px 16px 12px; }
+      .modal-plan-inner { padding: 0 16px 10px; }
+      .modal-footer { flex-direction: column; gap: 10px; padding: 14px 16px 16px; }
+      .btn { width: 100%; min-width: 0; min-height: 44px; }
+      .payment-method-box { padding: 18px 14px 14px; }
+      .payment-method-title { font-size: 20px; }
+      .payment-method-subtitle { font-size: 15px; }
+      .option-text { white-space: normal; font-size: 17px; }
+      .processing-card { width: calc(100% - 24px); padding: 26px 18px; }
+    }
+
+    @media (max-width: 340px) {
+      body { padding: 8px 4px; }
+      .page { padding: 10px; border-radius: 10px; }
+      .title-block h1 { font-size: 20px; }
+      .title-block p, .lead-container p { font-size: 12px; }
+      .plans-grid { gap: 10px; }
+      .plan-card { padding: 12px; border-radius: 10px; }
+      .plan-tag { font-size: 10px; padding: 4px 7px; }
+      .plan-name { font-size: 16px; }
+      .plan-price { font-size: 19px; }
+      .note { font-size: 12px; line-height: 1.4; }
     }
   </style>
 </head>
@@ -905,7 +939,7 @@
       processingOverlay.style.display = 'flex';
       processingOverlay.setAttribute('aria-hidden', 'false');
       window.setTimeout(() => {
-        window.location.href = 'conf.html';
+        window.location.href = selectedPlan && selectedPlan.id === '5gb' ? 'trial.html' : 'conf.html';
       }, 1400);
     });
 
